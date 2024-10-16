@@ -211,7 +211,7 @@ void adicionaValoresMatriz(Campo **matriz, int tamanho) {
   for (int i = 0; i < tamanho; i++) {
     for (int j = 0; j < tamanho; j++) {
       matriz[i][j].quantBombas = 0;
-      matriz[i][j].ehVisivel = 0;
+      matriz[i][j].ehVisivel = 1;
     }
   }
 }
@@ -284,9 +284,13 @@ void imprimeMatriz(Campo **matriz, int tamanho) {
     
     for (int j = 0; j < tamanho; j++) {
       if (matriz[i][j].ehVisivel) {
-        printf(" %d ", matriz[i][j].quantBombas);
+        if(matriz[i][j].quantBombas == -1) {
+          printf("%d ", matriz[i][j].quantBombas);
+        } else {
+          printf(" %d ", matriz[i][j].quantBombas);
+        }
       } else {
-        printf(" # ");
+        printf(" x ");
       }
     }
     printf("\n");
