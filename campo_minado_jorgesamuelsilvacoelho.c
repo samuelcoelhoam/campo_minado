@@ -39,6 +39,8 @@ void imprimeMatriz(Campo **matriz, int tamanho);
 
 void tornaCamposVisiveis(Campo **matriz, int tamanho);
 
+int verificaValidadeCoordenada(Coordenada vetor[], int tamanho, Coordenada nova);
+
 int main(void) {
 
   int tamanhoMat = retornaTamanhoCampo();
@@ -205,12 +207,32 @@ int retornaQuantBombas(int tamanho) {
 // Função que percorre o vetor que armazena as coordenadas em que ficarão as bombas, e gera números aleatórios no intervalo de 0 a tamanho da matriz - 1 para serem as coordenadas das bombas.
 
 void defineLocaldasBombas(Coordenada vetor[], int quantBombas, int tamanho) {
+  int x, y, quantCoordenadas;
+  quantCoordenadas = 0;
   srand(time(NULL));
 
-  for (int i = 0; i < quantBombas; i++) {
-    vetor[i].x = rand() % tamanho;
-    vetor[i].y = rand() % tamanho;
+  while (quantCoordenadas < quantBombas) {
+    Coordenada novaCoordenada;
+    novaCoordenada.x = rand() % tamanho;
+    novaCoordenada.y = rand() % tamanho;
+
+    if(!verificaValidadeCoordenada(vetor, tamanho, novaCoordenada)) {
+      vetor[quantCoordenadas].x = novaCoordenada.x;
+      vetor[quantCoordenadas].y = novaCoordenada.y;
+      quantCoordenadas ++;
+    }
   }
+}
+
+// Função para verificar se a coordenada gerada aleatoriamente para conter uma bomba já existe no vetor de coordenadas das bombas. Caso a coordenada já exista, gera novamente outra coordenada.
+
+int verificaValidadeCoordenada(Coordenada vetor[], int tamanho, Coordenada nova) {
+    for (int i = 0; i < tamanho; i++) {
+        if (vetor[i].x == nova.x && vetor[i].y == nova.y) {
+            return 1; 
+        }
+    }
+    return 0;
 }
 
 // Função criada para preencher a matriz com o seu padrão de quantidade de bombas = 0 e visibilidade = 0.
@@ -219,7 +241,7 @@ void adicionaValoresMatriz(Campo **matriz, int tamanho) {
   for (int i = 0; i < tamanho; i++) {
     for (int j = 0; j < tamanho; j++) {
       matriz[i][j].quantBombas = 0;
-      matriz[i][j].ehVisivel = 0;
+      matriz[i][j].ehVisivel = 1;
     }
   }
 }
