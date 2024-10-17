@@ -241,7 +241,7 @@ void adicionaValoresMatriz(Campo **matriz, int tamanho) {
   for (int i = 0; i < tamanho; i++) {
     for (int j = 0; j < tamanho; j++) {
       matriz[i][j].quantBombas = 0;
-      matriz[i][j].ehVisivel = 1;
+      matriz[i][j].ehVisivel = 0;
     }
   }
 }
@@ -298,6 +298,7 @@ void imprimeMatriz(Campo **matriz, int tamanho) {
       printf(" %d", i + 1);
     }
   }
+  printf("\n");
   printf("\n");
 
   // Exibe espaçamentos e números das linhas da matriz.
