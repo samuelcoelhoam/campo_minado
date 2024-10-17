@@ -72,7 +72,9 @@ int main(void) {
   // Estrutura de repetição utilizada para pedir coordenadas para o usuário enquanto ainda houverem campos sem bomba que ainda não foram revelados. 
   
   while (quantCamposSemBomba > 0) {
+    printf("\n");
     printf("Digite as coordenadas do campo que deseja verificar, escreva no formato ""x,y""\n");
+    printf("\n");
     int x, y;
 
     scanf("%d,%d", &x, &y);
@@ -94,11 +96,15 @@ int main(void) {
     
     if (verificaCoordenada(tamanhoMat, coordenadaX, coordenadaY)) {
       if (matriz[coordenadaX][coordenadaY].ehVisivel) {
+        printf("\n");
         printf("Você já abriu esse campo!\n");
+        printf("\n");
       } else {
         if (matriz[coordenadaX][coordenadaY].quantBombas != -1) {
           matriz[coordenadaX][coordenadaY].ehVisivel = 1;
+          printf("\n");
           printf("Ufa, sem bombas por aqui!\n");
+          printf("\n");
           imprimeMatriz(matriz, tamanhoMat);
           quantCamposSemBomba--;
         } else {
@@ -109,7 +115,9 @@ int main(void) {
         }
       }
     } else {
+      printf("\n");
       printf("Coordenada inválida!\n");  
+      printf("\n");
     }
   }
 
@@ -211,7 +219,7 @@ void adicionaValoresMatriz(Campo **matriz, int tamanho) {
   for (int i = 0; i < tamanho; i++) {
     for (int j = 0; j < tamanho; j++) {
       matriz[i][j].quantBombas = 0;
-      matriz[i][j].ehVisivel = 1;
+      matriz[i][j].ehVisivel = 0;
     }
   }
 }
