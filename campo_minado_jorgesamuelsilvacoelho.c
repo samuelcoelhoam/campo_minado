@@ -45,15 +45,15 @@ void verificaMatriz(Campo ** matriz, int tamanho);
 
 void verificaVetor(Coordenada vetor[], int tamanho);
 
+void alocaMatriz(Campo **matriz, int tamanho);
+
 int main(void) {
 
   int tamanhoMat = retornaTamanhoCampo();
 
   Campo **matriz = (Campo **)malloc(tamanhoMat * sizeof(Campo *));
 
-  for (int i = 0; i < tamanhoMat; i++) {
-    matriz[i] = (Campo *)malloc(tamanhoMat * sizeof(Campo));
-  }
+  alocaMatriz(matriz, tamanhoMat);
 
   int quantBombas = retornaQuantBombas(tamanhoMat);
 
@@ -201,6 +201,12 @@ int escaneiaDificuldade() {
   } while (1);
 
   return dificuldade;
+}
+
+void alocaMatriz(Campo **matriz, int tamanho) {
+  for (int i = 0; i < tamanho; i++) {
+    matriz[i] = (Campo *)malloc(tamanho * sizeof(Campo));
+  }
 }
 
 // Verifica se há espaço para a matriz
