@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-// Declaração da struct coordenada, utilizada para armazenar o local onde as bombas são posicionadas, comparar os locais onde o jogador já jogou e verificar se a coordenada que o usuário escolhe está vazia ou não.
+// Declaração da struct coordenada, utilizada para armazenar o local onde as bombas são posicionadas.
 
 typedef struct coordenada {
   int x;
@@ -41,6 +41,10 @@ void tornaCamposVisiveis(Campo **matriz, int tamanho);
 
 int verificaValidadeCoordenada(Coordenada vetor[], int tamanho, Coordenada nova);
 
+void verificaMatriz(Campo ** matriz, int tamanho);
+
+void verificaVetor(Coordenada vetor[], int tamanho);
+
 int main(void) {
 
   int tamanhoMat = retornaTamanhoCampo();
@@ -53,11 +57,15 @@ int main(void) {
 
   int quantBombas = retornaQuantBombas(tamanhoMat);
 
-  int quantCamposSemBomba = tamanhoMat * tamanhoMat - quantBombas;
+  int quantCamposSemBomba = tamanhoMat * tamanhoMat - quantBombas; // Quantidade de campos que não possuem bombas.
 
   // O vetorBombas foi criado como forma de armazenar as coordenadas das bombas, que posteriormente precisam ser adicionadas à matriz.
 
   Coordenada *vetorBombas = (Coordenada *)malloc(quantBombas * sizeof(Coordenada));
+
+  verificaVetor(vetorBombas, quantBombas); // Verifica se há espaço para o vetorBombas.
+
+  verificaMatriz(matriz, tamanhoMat); // Verifica se há espaço para a matriz.
 
   defineLocaldasBombas(vetorBombas, quantBombas, tamanhoMat);
 
@@ -77,12 +85,8 @@ int main(void) {
     printf("\n");
     printf("Digite as coordenadas do campo que deseja verificar, escreva no formato ""x,y""\n");
     printf("\n");
-    int x, y;
-
-    scanf("%d,%d", &x, &y);
-
-    int coordenadaX = x - 1;
-    int coordenadaY = y - 1;
+    int x, y, resultado;
+    bool gameOver = 0;
 
     /* 
     Lógica criada para verificar se a coordenada que o usuário escolheu está dentro dos limites da matriz.
@@ -93,33 +97,65 @@ int main(void) {
     2. Se o elemento da matriz na coordenada que o usuário escolheu não estiver vísivel e não houver bomba na coordenada escolhida, imprime "Ufa, sem bombas por aqui!".
     3. Se o elemento da matriz na coordenada que o usuário escolheu não estiver vísivel e houver bomba na coordenada escolhida, imprime "game over".
 
-    Caso a coordenada não esteja denrto dos limites da matriz, imprime "Coordenada inválida!".
+    Caso a coordenada não esteja demtro dos limites da matriz, imprime "Coordenada inválida!".
+
+    O do while foi utilziado para tratamento de exceções que dependem do input do usuário.
     */
     
-    if (verificaCoordenada(tamanhoMat, coordenadaX, coordenadaY)) {
-      if (matriz[coordenadaX][coordenadaY].ehVisivel) {
-        printf("\n");
-        printf("Você já abriu esse campo!\n");
-        printf("\n");
-      } else {
-        if (matriz[coordenadaX][coordenadaY].quantBombas != -1) {
-          matriz[coordenadaX][coordenadaY].ehVisivel = 1;
-          printf("\n");
-          printf("Ufa, sem bombas por aqui!\n");
-          printf("\n");
-          imprimeMatriz(matriz, tamanhoMat);
-          quantCamposSemBomba--;
+    do {
+      resultado = scanf("%d,%d", &x, &y);
+
+      int coordenadaX = x - 1;
+      int coordenadaY = y - 1;
+
+      if (resultado == 2) {
+        if (verificaCoordenada(tamanhoMat, coordenadaX, coordenadaY)) {
+          if (matriz[coordenadaX][coordenadaY].ehVisivel) {
+            printf("\n");
+            printf("Você já abriu esse campo!\n");
+            printf("\n");
+          } else {
+            if (matriz[coordenadaX][coordenadaY].quantBombas != -1) {
+              matriz[coordenadaX][coordenadaY].ehVisivel = 1;
+              printf("\n");
+              printf("Ufa, sem bombas por aqui!\n");
+              printf("\n");
+              imprimeMatriz(matriz, tamanhoMat);
+              printf("\n");
+              printf("Digite mais coordenadas, no formato ""x,y"", para continuar\n");
+              printf("\n");
+              quantCamposSemBomba--;
+            } else {
+              printf("\n");
+              printf("game over\n");
+              printf("\n");
+              tornaCamposVisiveis(matriz, tamanhoMat);
+              imprimeMatriz(matriz, tamanhoMat);
+              gameOver = 1;
+              break;
+            }
+          }
         } else {
-          printf("game over\n");
-          tornaCamposVisiveis(matriz, tamanhoMat);
-          imprimeMatriz(matriz, tamanhoMat);
-          break;
+          printf("\n");
+          printf("Coordenada inválida!\n");  
+          printf("\n");
         }
+      } else {
+        printf("\n");
+        printf("A coordenada que você inseriu é inválida! Digite no formato: ""numero,numero""\n");
+        printf("\n");
+
+        while (getchar() != '\n'); // Limpa o buffer de entrada, caso o usuário insira um input inválido.
       }
-    } else {
-      printf("\n");
-      printf("Coordenada inválida!\n");  
-      printf("\n");
+
+      if (quantCamposSemBomba == 0) {
+        break;
+      }
+
+    } while (1);
+
+    if(gameOver) {
+      break;
     }
   }
 
@@ -127,11 +163,19 @@ int main(void) {
   
   if(quantCamposSemBomba == 0) {
     printf("parabens, voce eh fera\n");
+    tornaCamposVisiveis(matriz, tamanhoMat);
+    imprimeMatriz(matriz, tamanhoMat);
   }
 
+  // Liberação da memória alocada para o vetor e a matriz alocada dinamicamente.
+
   free(vetorBombas);
+
+  for(int i = 0; i < tamanhoMat; i++) {
+    free(matriz[i]);
+  }
+
   free(matriz);
-  
 }
 
 // Função criada para retornar a dificuldade do jogo, escolhida pelo usuário. Há tratamento de exceções para quando o usuário digita qualquer valor que não seja, 1, 2 ou 3.
@@ -150,15 +194,38 @@ int escaneiaDificuldade() {
       printf("Essa dificuldade não está entre as dificuldades oferecidas! "
         "Escolha entre uma das seguintes opções:\n");
       printf("\u20221- Fácil\n\u20222- Médio\n\u20223- Difícil\n");
-
-      // Estrututura de repetição criada para limpar o buffer de entrada, caso o usuário digite um valor que não seja um número inteiro, sobrando assim muitos elementos no buffer para serem percorridos.
       
-      while (getchar() != '\n'); 
+      while (getchar() != '\n'); // Limpa o buffer de entrada, caso o usuário insira um input inválido.
     }
 
   } while (1);
 
   return dificuldade;
+}
+
+// Verifica se há espaço para a matriz
+
+void verificaMatriz(Campo ** matriz, int tamanho) {
+  if (matriz == NULL) {
+    printf("Memória insuficiente");
+    exit(1);
+  }
+
+  for(int i = 0; i < tamanho; i++){
+    if(matriz[i] == NULL) {
+      printf("Memória insuficiente");
+      exit(1);
+    }
+  }
+}
+
+// Verifica se há espaço para o vetor
+
+void verificaVetor(Coordenada vetor[], int tamanho) {
+  if (vetor == NULL) {
+    printf("Memória insuficiente");
+    exit(1);
+  }
 }
 
 // Função que recebe a coordenada escolhida pelo usuário e verifica se ela está dentro dos limites da matriz, que varia de acordo com o tamanho dela, parâmetro também recebido pela função.
@@ -311,7 +378,7 @@ void imprimeMatriz(Campo **matriz, int tamanho) {
       printf("  ");
     }
 
-    // Percorre os elementos da matriz e verifica se cada elemento é visível para o usuário ou não, imprimindo a quantidade de bombas na coordenada caso seja visível ou "#" caso não seja.
+    // Percorre os elementos da matriz e verifica se cada elemento é visível para o usuário ou não, imprimindo a quantidade de bombas na coordenada caso seja visível ou "x" caso não seja.
     
     for (int j = 0; j < tamanho; j++) {
       if (matriz[i][j].ehVisivel) {
