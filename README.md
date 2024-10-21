@@ -4,14 +4,25 @@ O presente trabalho foi proposto como primeira forma avaliativa da disciplina Al
 
 ## 💣 Começando
 
-Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
+O jogo consiste em escolher células dentro de um tabuleiro, evitando que as células escolhidas contenham bombas. Caso o jogador consiga revelar todas as células que não possuem bombas, ele vence!
+
+Nesse trabalho, o usuário pode escolher entre as seguintes dificuldades: Fácil, Médio e Difícil. De acordo com elas, o tabuleiro irá ter um tamanho e uma quantidade de bombas diferente. 
+
+Segue imagem para ilustrar como é construído o tabuleiro:
+
+![1](https://github.com/user-attachments/assets/2f91832f-9384-4227-9c66-593212eb08cb)
+
+As representações são meramente ilustrativas pois, para esse projeto, foi necessário que nas dificuldades fácil, médio e difiícil houvessem tabuleiros de ordem 10, 20 e 30 respectivamente. Cujas quantidades de bombas também aumentavam conforme o tamanho do tabuleiro, sendo 3,6 e 9 as quantidades de bombas presentes nos tabuleiros.
+
+
+Importante lembrar que ao escolher uma célula que não possui bomba, o jogo alerta ao usuário a quantidade de bombas adjacentes aquela célula. Esse ponto é de suma importância para elaborar uma estratégia de jogo!
 
 ## 🛠️ Construído com
 
 Mencione as ferramentas que você usou para criar seu projeto
 
 * [C]([http://www.dropwizard.io/1.0.2/docs/](https://devdocs.io/c/)) - Linguagem de programação utilizada
-* [Visual Studio Code]([https://maven.apache.org/](https://code.visualstudio.com/)) - Ide utilizada
+* [Visual Studio Code]([https://maven.apache.org/](https://code.visualstudio.com/)) - IDE utilizada
 
 ## ✒️ Autores
 
